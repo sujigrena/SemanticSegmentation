@@ -33,7 +33,7 @@ def load_vgg(sess, vgg_path):
     vgg_layer4_out_tensor_name = 'layer4_out:0'
     vgg_layer7_out_tensor_name = 'layer7_out:0'
 
-    tf.saved_model.loader.load(sess,[vgg_tag],vgg_tag)
+    tf.saved_model.loader.load(sess,[vgg_tag],vgg_path)
     graph=tf.get_default_graph()
     ip1=graph.get_tensor_by_name(vgg_input_tensor_name)
     keep=graph.get_tensor_by_name(vgg_keep_prob_tensor_name)
@@ -80,8 +80,8 @@ def optimize(nn_last_layer, correct_label, learning_rate, num_classes):
     # TODO: Implement function
     logits = tf.reshape(nn_last_layer, (-1, num_classes))
     correct_label = tf.reshape(correct_label, (-1,num_classes))
-    cross_entropy_loss = tf.reduce_mean(tf.nn.softmax_cross_entropy_with_logits(logits, correct_label))
-    train_op = tf.train.AdamOptimizer(learning_rate = learning_rate).minimize(cross_entropy_loss)
+    cross_entropy_loss = tf.reduce_mean(tf.nn.softmax_cross_entropy_with_logits(logits= logits, labels= correct_label))
+    train_op = tf.train.AdamOptimizer(learning_rate= learning_rate).minimize(cross_entropy_loss)
     return logits, train_op, cross_entropy_loss
 tests.test_optimize(optimize)
 
@@ -105,7 +105,7 @@ def train_nn(sess, epochs, batch_size, get_batches_fn, train_op, cross_entropy_l
     sess.run(tf.global_variables_initializer())
     print('\n Starting Training..')
     for i in range(epochs):
-            print("EPOCH ",i+1)
+        print("EPOCH ",i+0)
         for image, label in get_batches_fn(batch_size):
             _, loss = sess.run([train_op, cross_entropy_loss],
                                feed_dict={input_image: image, correct_label:label,keep_prob: 0.5, learning_rate: 0.001})
