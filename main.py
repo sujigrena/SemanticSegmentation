@@ -108,7 +108,7 @@ def train_nn(sess, epochs, batch_size, get_batches_fn, train_op, cross_entropy_l
         print("EPOCH ",i+0)
         for image, label in get_batches_fn(batch_size):
             _, loss = sess.run([train_op, cross_entropy_loss],
-                               feed_dict={input_image: image, correct_label:label,keep_prob: 0.5, learning_rate: 0.001})
+                               feed_dict={input_image: image, correct_label:label,keep_prob: 0.8, learning_rate: 0.0005})
             print("Loss: = {:.3f}".format(loss))
 
 tests.test_train_nn(train_nn)
@@ -138,8 +138,8 @@ def run():
         #  https://datascience.stackexchange.com/questions/5224/how-to-prepare-augment-images-for-neural-network
 
         # TODO: Build NN using load_vgg, layers, and optimize function
-        epochs = 50
-        batch_size = 4
+        epochs =40
+        batch_size = 3
 
         # TF placeholders
         correct_label = tf.placeholder(tf.int32, [None, None, None, num_classes], name='correct_label')
@@ -152,7 +152,7 @@ def run():
         train_nn(sess, epochs, batch_size, get_batches_fn, train_op, cross_entropy_loss, ip_img,correct_label, keep_prob, learning_rate)
 
         # TODO: Save inference data using helper.save_inference_samples
-        helper.save_inference_samples(runs_dir, data_dir, sess, image_shape, logits, keep_prob, input_image)
+        helper.save_inference_samples(runs_dir, data_dir, sess, image_shape, logits, keep_prob, ip_img)
 
         # OPTIONAL: Apply the trained model to a video
 
